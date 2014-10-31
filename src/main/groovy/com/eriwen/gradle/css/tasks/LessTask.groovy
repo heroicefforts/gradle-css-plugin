@@ -24,32 +24,6 @@ import org.gradle.api.tasks.TaskAction
 class LessTask extends SourceTask {
     @OutputDirectory def dest
 
-    /** 
-     * A custom exception to wrap the compiler error and the file it occurred 
-     * in in one exception so that gradle build failure messaging contains all the 
-     * relevant information. 
-     */
-    static class LessCompilationException extends RuntimeException {
-        File file
-        def project
-
-        LessCompilationException(cause, file, project) {
-            super(cause)
-            this.file = file
-            this.project = project
-        }
-
-        String getMessage() {
-            def path = project.relativePath(file)
-            def context = (cause instanceof LessException) ?
-                "Less compilation error at ${path}:${cause.line}" :
-                "Less compilation error in file ${path}"
-
-            """$context
-              |${cause.message}""".stripMargin()
-        }
-    }
-
     File getDest() {
         project.file(dest)
     }
